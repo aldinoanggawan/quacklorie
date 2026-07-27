@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { PulsingDuck } from '../../components/PulsingDuck';
 import { LoadingScreen } from '../../components/LoadingScreen';
@@ -11,6 +11,7 @@ import { getProfile } from '../../lib/db';
 export const Splash = () => {
   const navigate = useNavigate();
   const { session, loading } = useAuth();
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     if (loading || !session) return;
@@ -24,16 +25,26 @@ export const Splash = () => {
   if (loading || session) return <LoadingScreen />;
 
   return (
-    <div className="relative flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden bg-canvas pt-12 px-6 pb-11">
+    <main className="relative flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden bg-canvas pt-12 px-6 pb-11">
       {/* Warm yellow blob — top right */}
       <motion.div
-        animate={{ scale: [1, 1.12, 1], x: [0, 14, 0], y: [0, -14, 0] }}
+        aria-hidden="true"
+        animate={
+          prefersReducedMotion
+            ? false
+            : { scale: [1, 1.12, 1], x: [0, 14, 0], y: [0, -14, 0] }
+        }
         transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
         className="pointer-events-none absolute right-[-90px] top-[-90px] h-[280px] w-[280px] rounded-full bg-[rgba(232,212,74,0.55)] blur-[52px]"
       />
       {/* Teal blob — bottom left */}
       <motion.div
-        animate={{ scale: [1, 1.18, 1], x: [0, -16, 0], y: [0, 14, 0] }}
+        aria-hidden="true"
+        animate={
+          prefersReducedMotion
+            ? false
+            : { scale: [1, 1.18, 1], x: [0, -16, 0], y: [0, 14, 0] }
+        }
         transition={{
           duration: 11,
           repeat: Infinity,
@@ -44,7 +55,12 @@ export const Splash = () => {
       />
       {/* Pink blob — bottom right */}
       <motion.div
-        animate={{ scale: [1, 1.1, 1], x: [0, 10, 0], y: [0, 20, 0] }}
+        aria-hidden="true"
+        animate={
+          prefersReducedMotion
+            ? false
+            : { scale: [1, 1.1, 1], x: [0, 10, 0], y: [0, 20, 0] }
+        }
         transition={{
           duration: 10,
           repeat: Infinity,
@@ -63,7 +79,7 @@ export const Splash = () => {
           className="mb-7 rounded-card border-1.5 border-line-brand bg-surface-brand-pale py-1 px-3.5 tracking-badge"
         >
           <Typography variant="label-strong" color={'var(--color-brand)'}>
-            ✦ Your pocket nutrition pal
+            <span aria-hidden="true">✦</span> Your pocket nutrition pal
           </Typography>
         </motion.div>
 
@@ -110,15 +126,16 @@ export const Splash = () => {
         </motion.div>
 
         {/* Pill tags */}
-        <motion.div
+        <motion.ul
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="mb-9 flex flex-wrap justify-center gap-2"
+          className="m-0 mb-9 flex list-none flex-wrap justify-center gap-2 p-0"
         >
           {['Calorie tracking', 'Hydration', 'Streaks'].map((tag) => (
             <Typography
               key={tag}
+              as="li"
               variant="label"
               color="var(--color-muted)"
               className="rounded-card border border-line bg-[rgba(240,228,192,0.85)] py-1 px-3.5"
@@ -126,7 +143,7 @@ export const Splash = () => {
               {tag}
             </Typography>
           ))}
-        </motion.div>
+        </motion.ul>
 
         {/* CTA */}
         <OnboardingCTA
@@ -134,6 +151,6 @@ export const Splash = () => {
           label="Get started"
         />
       </div>
-    </div>
+    </main>
   );
 };
