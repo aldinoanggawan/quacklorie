@@ -10,7 +10,7 @@ interface OnboardingCTAProps {
 
 export const OnboardingCTA = ({
   onClick,
-  label = 'Next →',
+  label = 'Next',
   color,
   animationDelay = 0.58,
 }: OnboardingCTAProps) => (
@@ -21,7 +21,7 @@ export const OnboardingCTA = ({
     className="w-full"
   >
     <Button onClick={onClick} color={color}>
-      {label}
+      {label} <span aria-hidden="true">→</span>
     </Button>
   </motion.div>
 );

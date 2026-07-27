@@ -258,7 +258,7 @@ export const ProfileSetup = () => {
       <div className="pt-0.5">
         <OnboardingCTA
           onClick={handleNext}
-          label="Calculate my plan →"
+          label="Calculate my plan"
           animationDelay={0.1}
         />
       </div>

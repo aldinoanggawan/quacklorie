@@ -94,7 +94,7 @@ export const PaceSelection = () => {
         </motion.div>
       </div>
 
-      <OnboardingCTA onClick={handleNext} label="Let's go →" />
+      <OnboardingCTA onClick={handleNext} label="Let's go" />
     </ScreenContainer>
   );
 };

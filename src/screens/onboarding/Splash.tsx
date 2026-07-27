@@ -131,7 +131,7 @@ export const Splash = () => {
         {/* CTA */}
         <OnboardingCTA
           onClick={() => navigate('/auth')}
-          label="Get started →"
+          label="Get started"
         />
       </div>
     </div>
