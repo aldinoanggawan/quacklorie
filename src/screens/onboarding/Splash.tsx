@@ -146,10 +146,7 @@ export const Splash = () => {
         </motion.ul>
 
         {/* CTA */}
-        <OnboardingCTA
-          onClick={() => navigate('/auth')}
-          label="Get started"
-        />
+        <OnboardingCTA onClick={() => navigate('/auth')} label="Get started" />
       </div>
     </main>
   );
