@@ -12,13 +12,13 @@ export const ScreenContainer = ({
   className,
 }: ScreenContainerProps) => (
   <div className="min-h-[100dvh]" style={{ background }}>
-    <div
+    <main
       className={classNames(
         'mx-auto flex min-h-[100dvh] max-w-screen flex-col px-6 pb-28',
         className,
       )}
     >
       {children}
-    </div>
+    </main>
   </div>
 );

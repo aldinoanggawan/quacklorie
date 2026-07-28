@@ -21,6 +21,8 @@ export const SelectionCard = ({
   animationDelay?: number;
 }) => (
   <motion.button
+    role="radio"
+    aria-checked={isSelected}
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ delay: animationDelay }}

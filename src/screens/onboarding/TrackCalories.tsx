@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Duck } from '../../components/duck/Duck';
 import { OnboardingCTA } from '../../components/OnboardingCTA';
@@ -39,19 +39,23 @@ const TAGS = [
 
 export const TrackCalories = () => {
   const navigate = useNavigate();
+  const prefersReducedMotion = useReducedMotion();
 
   return (
     <ScreenContainer>
       <ProgressDots current={1} />
 
       <div className="flex flex-1 flex-col justify-center gap-7">
-        {/* Card */}
-        <div className="relative h-72 overflow-hidden rounded-3xl border border-line-brand bg-surface-brand">
+        {/* Card — decorative illustration, meaning is repeated in the text below */}
+        <div
+          aria-hidden="true"
+          className="relative h-72 overflow-hidden rounded-3xl border border-line-brand bg-surface-brand"
+        >
           {/* Floating calorie tags */}
           {TAGS.map((tag) => (
             <motion.div
               key={tag.label}
-              animate={{ y: [0, -7, 0] }}
+              animate={prefersReducedMotion ? undefined : { y: [0, -7, 0] }}
               transition={{
                 duration: 2.8,
                 repeat: Infinity,
@@ -87,7 +91,7 @@ export const TrackCalories = () => {
           {/* Duck peeking from bottom-right */}
           <motion.div
             className="absolute -bottom-6 right-4"
-            animate={{ y: [0, -8, 0] }}
+            animate={prefersReducedMotion ? undefined : { y: [0, -8, 0] }}
             transition={{ duration: 2.5, ease: 'easeInOut', repeat: Infinity }}
           >
             <Duck emotion="happy" size={110} />
