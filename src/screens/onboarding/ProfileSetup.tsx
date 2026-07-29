@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Duck } from '../../components/duck/Duck';
 import { FemaleIcon } from '../../components/icons/FemaleIcon';
@@ -60,6 +60,7 @@ export const ProfileSetup = () => {
   const [activityLevel, setActivityLevel] = useState<ActivityLevel>(
     profile?.activityLevel ?? 'light',
   );
+  const prefersReducedMotion = useReducedMotion();
 
   const tdee = useMemo(
     () => calculateTdee({ age, heightCm, weightKg, sex, activityLevel }),
@@ -115,7 +116,8 @@ export const ProfileSetup = () => {
           </Typography>
         </div>
         <motion.div
-          animate={{ y: [0, -5, 0] }}
+          aria-hidden="true"
+          animate={prefersReducedMotion ? undefined : { y: [0, -5, 0] }}
           transition={{ duration: 2.4, ease: 'easeInOut', repeat: Infinity }}
           className="mt-1 shrink-0"
         >
@@ -162,27 +164,33 @@ export const ProfileSetup = () => {
         />
       </div>
 
-      <div className="flex gap-2.5">
+      <div role="radiogroup" aria-label="Sex" className="flex gap-2.5">
         {(['male', 'female'] as Sex[]).map((option) => {
           const isSelected = sex === option;
           return (
-            <button
+            <label
               key={option}
-              type="button"
-              onClick={() => setSex(option)}
               className={
                 isSelected
-                  ? 'flex-1 cursor-pointer rounded-element border-1.5 border-brand bg-surface-brand py-3 px-2 text-center text-ink transition-all duration-150 [font-family:inherit]'
-                  : 'flex-1 cursor-pointer rounded-element border-1.5 border-line bg-white py-3 px-2 text-center text-ink transition-all duration-150 [font-family:inherit]'
+                  ? 'flex-1 cursor-pointer rounded-element border-1.5 border-brand bg-surface-brand py-3 px-2 text-center text-ink transition-all duration-150 [font-family:inherit] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-brand has-[:focus-visible]:ring-offset-2'
+                  : 'flex-1 cursor-pointer rounded-element border-1.5 border-line bg-white py-3 px-2 text-center text-ink transition-all duration-150 [font-family:inherit] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-brand has-[:focus-visible]:ring-offset-2'
               }
             >
-              <span className="mb-1 flex justify-center">
+              <input
+                type="radio"
+                name="sex"
+                value={option}
+                checked={isSelected}
+                onChange={() => setSex(option)}
+                className="sr-only"
+              />
+              <span aria-hidden="true" className="mb-1 flex justify-center">
                 <SexIcon sex={option} />
               </span>
               <Typography variant="label" color={'var(--color-muted)'}>
                 {option === 'male' ? 'Male' : 'Female'}
               </Typography>
-            </button>
+            </label>
           );
         })}
       </div>
@@ -191,25 +199,36 @@ export const ProfileSetup = () => {
         <Typography
           variant="label-strong"
           as="p"
+          id="activity-level-heading"
           color={'var(--color-muted)'}
           className="mb-1.5"
         >
           Activity level
         </Typography>
-        <div className="flex flex-col gap-2">
+        <div
+          role="radiogroup"
+          aria-labelledby="activity-level-heading"
+          className="flex flex-col gap-2"
+        >
           {ACTIVITY_OPTIONS.map((option) => {
             const isSelected = activityLevel === option.id;
             return (
-              <button
+              <label
                 key={option.id}
-                type="button"
-                onClick={() => setActivityLevel(option.id)}
                 className={
                   isSelected
-                    ? 'flex cursor-pointer items-center gap-3.5 rounded-element border-1.5 border-brand bg-surface-brand py-2.5 px-3.5 text-left [font-family:inherit]'
-                    : 'flex cursor-pointer items-center gap-3.5 rounded-element border-1.5 border-line bg-white py-2.5 px-3.5 text-left [font-family:inherit]'
+                    ? 'flex cursor-pointer items-center gap-3.5 rounded-element border-1.5 border-brand bg-surface-brand py-2.5 px-3.5 text-left [font-family:inherit] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-brand has-[:focus-visible]:ring-offset-2'
+                    : 'flex cursor-pointer items-center gap-3.5 rounded-element border-1.5 border-line bg-white py-2.5 px-3.5 text-left [font-family:inherit] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-brand has-[:focus-visible]:ring-offset-2'
                 }
               >
+                <input
+                  type="radio"
+                  name="activity-level"
+                  value={option.id}
+                  checked={isSelected}
+                  onChange={() => setActivityLevel(option.id)}
+                  className="sr-only"
+                />
                 <span
                   aria-hidden="true"
                   className={
@@ -226,7 +245,7 @@ export const ProfileSetup = () => {
                     {option.subtitle}
                   </Typography>
                 </span>
-              </button>
+              </label>
             );
           })}
         </div>
@@ -252,7 +271,9 @@ export const ProfileSetup = () => {
             {goalLabel} · {budgetSub}
           </Typography>
         </div>
-        <Duck emotion="proud" size={62} />
+        <span aria-hidden="true">
+          <Duck emotion="proud" size={62} />
+        </span>
       </div>
 
       <div className="pt-0.5">

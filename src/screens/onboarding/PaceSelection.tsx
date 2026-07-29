@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Duck, type DuckEmotion } from '../../components/duck/Duck';
@@ -46,6 +46,7 @@ export const PaceSelection = () => {
   const navigate = useNavigate();
   const { setPace } = useOnboarding();
   const [selected, setSelected] = useState<PaceId>('balanced');
+  const prefersReducedMotion = useReducedMotion();
 
   const selectedPace = PACES.find((p) => p.id === selected)!;
 
@@ -66,17 +67,28 @@ export const PaceSelection = () => {
         >
           Step 6 of 6
         </Typography>
-        <Typography variant="heading" as="h1" className="mb-7 tracking-heading">
+        <Typography
+          variant="heading"
+          as="h1"
+          id="pace-heading"
+          className="mb-7 tracking-heading"
+        >
           How fast do you want to reach your goal?
         </Typography>
       </div>
 
-      <div className="flex flex-col gap-3">
+      <div
+        role="radiogroup"
+        aria-labelledby="pace-heading"
+        className="flex flex-col gap-3"
+      >
         {PACES.map((pace, i) => (
           <SelectionCard
             key={pace.id}
+            name="pace"
+            value={pace.id}
             isSelected={selected === pace.id}
-            onClick={() => setSelected(pace.id)}
+            onSelect={() => setSelected(pace.id)}
             icon={pace.emoji}
             label={pace.label}
             subtitle={pace.subtitle}
@@ -85,9 +97,13 @@ export const PaceSelection = () => {
         ))}
       </div>
 
-      <div className="mt-12 flex flex-1 items-start justify-center pb-2">
+      {/* Duck — decorative reaction to the selected pace */}
+      <div
+        aria-hidden="true"
+        className="mt-12 flex flex-1 items-start justify-center pb-2"
+      >
         <motion.div
-          animate={{ y: [0, -8, 0] }}
+          animate={prefersReducedMotion ? undefined : { y: [0, -8, 0] }}
           transition={{ duration: 2.5, ease: 'easeInOut', repeat: Infinity }}
         >
           <Duck emotion={selectedPace.emotion} size={110} />

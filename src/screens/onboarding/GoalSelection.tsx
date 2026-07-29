@@ -93,8 +93,10 @@ export const GoalSelection = () => {
         {GOALS.map((goal, i) => (
           <SelectionCard
             key={goal.id}
+            name="goal"
+            value={goal.id}
             isSelected={selected === goal.id}
-            onClick={() => setSelected(goal.id)}
+            onSelect={() => setSelected(goal.id)}
             icon={goal.icon}
             iconBg={goal.iconBg}
             label={goal.label}
