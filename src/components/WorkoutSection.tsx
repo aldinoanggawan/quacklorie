@@ -105,7 +105,11 @@ export const WorkoutSection = ({
             Add workout
           </Typography>
 
+          <label className="sr-only" htmlFor="workout-name">
+            Workout name
+          </label>
           <input
+            id="workout-name"
             type="text"
             placeholder="Workout name"
             value={name}
@@ -114,7 +118,11 @@ export const WorkoutSection = ({
             className={inputClass}
           />
 
+          <label className="sr-only" htmlFor="workout-duration">
+            Duration (min)
+          </label>
           <input
+            id="workout-duration"
             type="number"
             placeholder="Duration (min)"
             value={duration}
@@ -128,6 +136,7 @@ export const WorkoutSection = ({
                 key={mode}
                 type="button"
                 onClick={() => setKcalMode(mode)}
+                aria-pressed={kcalMode === mode}
                 className={classNames(
                   'flex-1 cursor-pointer border-0 py-2 font-[inherit] transition-colors duration-150',
                   kcalMode === mode ? 'bg-ink' : 'bg-transparent',
@@ -156,13 +165,19 @@ export const WorkoutSection = ({
           )}
 
           {kcalMode === 'manual' && (
-            <input
-              type="number"
-              placeholder="Kcal burned"
-              value={kcal}
-              onChange={(e) => setKcal(e.target.value)}
-              className={inputClass}
-            />
+            <>
+              <label className="sr-only" htmlFor="workout-kcal">
+                Kcal burned
+              </label>
+              <input
+                id="workout-kcal"
+                type="number"
+                placeholder="Kcal burned"
+                value={kcal}
+                onChange={(e) => setKcal(e.target.value)}
+                className={inputClass}
+              />
+            </>
           )}
 
           <div className="flex gap-2">

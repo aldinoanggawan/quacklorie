@@ -85,6 +85,7 @@ export const WorkoutCard = ({ workout, onSaved }: WorkoutCardProps) => {
           <div className="flex items-center justify-between">
             <div>
               <Typography
+                id={`calories-burned-${workout.id}`}
                 variant="caption"
                 color={'var(--color-muted)'}
                 className="uppercase tracking-label"
@@ -104,6 +105,7 @@ export const WorkoutCard = ({ workout, onSaved }: WorkoutCardProps) => {
             <div className="flex items-baseline gap-1">
               <input
                 type="number"
+                aria-labelledby={`calories-burned-${workout.id}`}
                 value={kcalInput}
                 onChange={(e) => setKcalInput(e.target.value)}
                 className="w-20 border-0 bg-transparent text-right text-heading font-extrabold text-ink outline-none [font-family:inherit]"

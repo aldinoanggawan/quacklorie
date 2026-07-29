@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ScreenContainer } from '../components/ScreenContainer';
@@ -35,6 +35,8 @@ export const MealLoggingScreen = () => {
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [localItems, setLocalItems] = useState<AnalysisItem[]>([]);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const editingIndexRef = useRef<number | null>(null);
+  const [itemDraft, setItemDraft] = useState('');
   const [addingItem, setAddingItem] = useState(false);
   const [newItemName, setNewItemName] = useState('');
   const [newItemKcal, setNewItemKcal] = useState('');
@@ -87,19 +89,48 @@ export const MealLoggingScreen = () => {
     }
   };
 
+  // editingIndexRef mirrors editingIndex but updates synchronously, so
+  // onBlur can read the current value even when it fires re-entrantly
+  // (see cancelItemEdit / confirmItemEdit calling input.blur()).
+  const updateEditingIndex = (next: number | null) => {
+    editingIndexRef.current = next;
+    setEditingIndex(next);
+  };
+
   const handleReanalyse = () => {
     setResult(null);
     setLocalItems([]);
-    setEditingIndex(null);
+    updateEditingIndex(null);
     setAddingItem(false);
     setNewItemName('');
     setNewItemKcal('');
     setError(null);
   };
 
+  const beginItemEdit = (i: number) => {
+    setItemDraft(String(localItems[i].kcal));
+    updateEditingIndex(i);
+  };
+
+  const confirmItemEdit = (i: number, input: HTMLInputElement) => {
+    const parsed = parseInt(itemDraft, 10);
+    if (!isNaN(parsed)) {
+      const next = [...localItems];
+      next[i] = { ...next[i], kcal: parsed };
+      setLocalItems(next);
+    }
+    updateEditingIndex(null);
+    input.blur();
+  };
+
+  const cancelItemEdit = (input: HTMLInputElement) => {
+    updateEditingIndex(null);
+    input.blur();
+  };
+
   const handleRemoveItem = (index: number) => {
     setLocalItems((prev) => prev.filter((_, i) => i !== index));
-    if (editingIndex === index) setEditingIndex(null);
+    if (editingIndex === index) updateEditingIndex(null);
   };
 
   const handleAddItem = () => {
@@ -153,6 +184,7 @@ export const MealLoggingScreen = () => {
       <div className="flex items-center gap-3">
         <button
           type="button"
+          aria-label="Go back"
           onClick={() => navigate(-1)}
           className="cursor-pointer border-0 bg-transparent py-1 pr-2 text-2xl leading-none text-ink"
         >
@@ -160,14 +192,21 @@ export const MealLoggingScreen = () => {
         </button>
         <Typography
           variant="subheading"
+          as="h1"
           color={'var(--color-ink)'}
           className="flex-1"
         >
           Log {mealType}
         </Typography>
         {remaining !== null && (
-          <div className="flex items-center gap-1 rounded-full border-1.5 border-line bg-surface-brand py-1 px-2.5">
-            <span className="text-xs">✦</span>
+          <div
+            role="group"
+            aria-label={`${remaining} of ${limit} analyses remaining today`}
+            className="flex items-center gap-1 rounded-full border-1.5 border-line bg-surface-brand py-1 px-2.5"
+          >
+            <span aria-hidden="true" className="text-xs">
+              ✦
+            </span>
             <Typography
               variant="label-strong"
               color={
@@ -277,6 +316,7 @@ export const MealLoggingScreen = () => {
             <AnimatePresence>
               {loading && (
                 <motion.div
+                  aria-hidden="true"
                   key="loading-duck"
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -305,7 +345,9 @@ export const MealLoggingScreen = () => {
                   <span>Analysing…</span>
                 </>
               ) : (
-                'Analyse →'
+                <>
+                  Analyse <span aria-hidden="true">→</span>
+                </>
               )}
             </Button>
 
@@ -334,7 +376,9 @@ export const MealLoggingScreen = () => {
             <div className="flex flex-col gap-3 rounded-2xl border border-line bg-surface-warm p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-base">⭐</span>
+                  <span aria-hidden="true" className="text-base">
+                    ⭐
+                  </span>
                   <Typography variant="label-strong" color={'var(--color-ink)'}>
                     AI analysis
                   </Typography>
@@ -348,6 +392,7 @@ export const MealLoggingScreen = () => {
                 {localItems.map((item, i) => (
                   <div key={i} className="flex items-center gap-2">
                     <span
+                      aria-hidden="true"
                       className={classNames(
                         'h-2 w-2 shrink-0 rounded-full',
                         item.eaten ? 'bg-brand' : 'bg-muted',
@@ -373,65 +418,81 @@ export const MealLoggingScreen = () => {
                       </Typography>
                     </div>
 
-                    {editingIndex === i ? (
+                    <div
+                      className={classNames(
+                        'flex items-baseline gap-1',
+                        editingIndex !== i &&
+                          'border-b-1.5 border-dashed border-muted pb-0.5',
+                      )}
+                    >
                       <input
                         type="number"
-                        value={item.kcal}
-                        onChange={(e) => {
-                          const next = [...localItems];
-                          next[i] = {
-                            ...next[i],
-                            kcal: parseInt(e.target.value, 10) || 0,
-                          };
-                          setLocalItems(next);
-                        }}
-                        onBlur={() => setEditingIndex(null)}
-                        onKeyDown={(e) =>
-                          e.key === 'Enter' && setEditingIndex(null)
+                        aria-label={`Calories for ${item.name}`}
+                        value={editingIndex === i ? itemDraft : item.kcal}
+                        readOnly={editingIndex !== i}
+                        style={
+                          editingIndex === i
+                            ? undefined
+                            : {
+                                width: `${Math.max(1, String(item.kcal).length)}ch`,
+                              }
                         }
-                        autoFocus
-                        className={classNames(
-                          inputClass,
-                          'w-16 rounded-lg py-0.5 px-1.5 text-right text-label',
-                        )}
+                        onFocus={(e) => {
+                          beginItemEdit(i);
+                          e.target.select();
+                        }}
+                        onChange={(e) => setItemDraft(e.target.value)}
+                        onBlur={(e) => {
+                          if (editingIndexRef.current === i) {
+                            confirmItemEdit(i, e.currentTarget);
+                          }
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter')
+                            confirmItemEdit(i, e.currentTarget);
+                          if (e.key === 'Escape')
+                            cancelItemEdit(e.currentTarget);
+                        }}
+                        className={
+                          editingIndex === i
+                            ? classNames(
+                                inputClass,
+                                'w-12 rounded-lg py-0.5 px-1.5 text-right text-label',
+                              )
+                            : classNames(
+                                'cursor-text border-0 bg-transparent text-right text-label font-[inherit]',
+                                item.eaten
+                                  ? 'text-ink no-underline'
+                                  : 'text-muted line-through',
+                              )
+                        }
                       />
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => setEditingIndex(i)}
-                        title="Tap to edit"
-                        className="cursor-text border-0 border-b-1.5 border-dashed border-muted bg-transparent py-0.5 font-[inherit]"
+                      <Typography
+                        variant="label-strong"
+                        color={'var(--color-muted)'}
                       >
-                        <Typography
-                          variant="label-strong"
-                          color={
-                            item.eaten
-                              ? 'var(--color-ink)'
-                              : 'var(--color-muted)'
-                          }
-                          className={
-                            item.eaten ? 'no-underline' : 'line-through'
-                          }
-                        >
-                          {item.kcal} kcal
-                        </Typography>
-                      </button>
-                    )}
+                        kcal
+                      </Typography>
+                    </div>
 
                     <button
                       type="button"
                       onClick={() => handleRemoveItem(i)}
-                      title="Remove item"
+                      aria-label={`Remove ${item.name}`}
                       className="shrink-0 cursor-pointer border-0 bg-transparent py-0.5 px-1 text-base leading-none text-muted"
                     >
-                      ×
+                      <span aria-hidden="true">×</span>
                     </button>
                   </div>
                 ))}
 
                 {addingItem ? (
                   <div className="mt-0.5 flex items-center gap-1.5">
+                    <label className="sr-only" htmlFor="new-item-name">
+                      Item name
+                    </label>
                     <input
+                      id="new-item-name"
                       placeholder="Item name"
                       value={newItemName}
                       onChange={(e) => setNewItemName(e.target.value)}
@@ -442,7 +503,11 @@ export const MealLoggingScreen = () => {
                         'flex-1 rounded-control py-1 px-2.5 text-label',
                       )}
                     />
+                    <label className="sr-only" htmlFor="new-item-kcal">
+                      Kcal
+                    </label>
                     <input
+                      id="new-item-kcal"
                       type="number"
                       placeholder="kcal"
                       value={newItemKcal}
@@ -456,9 +521,10 @@ export const MealLoggingScreen = () => {
                     <button
                       type="button"
                       onClick={handleAddItem}
+                      aria-label="Add item"
                       className="shrink-0 cursor-pointer border-0 bg-transparent py-0.5 px-1 text-base text-brand"
                     >
-                      ✓
+                      <span aria-hidden="true">✓</span>
                     </button>
                     <button
                       type="button"
@@ -467,9 +533,10 @@ export const MealLoggingScreen = () => {
                         setNewItemName('');
                         setNewItemKcal('');
                       }}
+                      aria-label="Cancel adding item"
                       className="shrink-0 cursor-pointer border-0 bg-transparent py-0.5 px-1 text-base text-muted"
                     >
-                      ×
+                      <span aria-hidden="true">×</span>
                     </button>
                   </div>
                 ) : (
@@ -522,7 +589,10 @@ export const MealLoggingScreen = () => {
                   <span>Saving…</span>
                 </>
               ) : (
-                `Log ${totalLogged} kcal to ${mealType} →`
+                <>
+                  Log {totalLogged} kcal to {mealType}{' '}
+                  <span aria-hidden="true">→</span>
+                </>
               )}
             </Button>
 
