@@ -80,7 +80,10 @@ export const HydrationSection = ({ date }: HydrationSectionProps) => {
 
       {bottleConfig && (
         <div className="flex items-center gap-3.5 rounded-2xl border-1.5 border-line-success bg-surface-water py-3.5 px-4">
-          <div className="flex flex-1 flex-wrap items-end gap-1">
+          <div
+            aria-hidden="true"
+            className="flex flex-1 flex-wrap items-end gap-1"
+          >
             {Array.from({ length: totalBlocks }).map((_, i) => (
               <GlassIcon key={i} index={i} value={filledValue} />
             ))}
@@ -121,7 +124,11 @@ export const HydrationSection = ({ date }: HydrationSectionProps) => {
               >
                 Set up your bottle
               </Typography>
+              <label className="sr-only" htmlFor="bottle-name">
+                Bottle name
+              </label>
               <input
+                id="bottle-name"
                 type="text"
                 placeholder="Bottle name (e.g. My Hydro Flask)"
                 value={bottleName}
@@ -130,7 +137,11 @@ export const HydrationSection = ({ date }: HydrationSectionProps) => {
                 className={inputClass}
               />
               <div className="flex gap-2">
+                <label className="sr-only" htmlFor="bottle-size">
+                  Bottle size
+                </label>
                 <input
+                  id="bottle-size"
                   type="number"
                   placeholder={
                     unit === 'ml' ? 'Size (e.g. 500)' : 'Size (e.g. 17)'
@@ -145,6 +156,7 @@ export const HydrationSection = ({ date }: HydrationSectionProps) => {
                       key={u}
                       type="button"
                       onClick={() => setUnit(u)}
+                      aria-pressed={unit === u}
                       className={classNames(
                         'cursor-pointer border-0 px-3.5 font-[inherit] transition-colors duration-150',
                         unit === u ? 'bg-ink' : 'bg-transparent',

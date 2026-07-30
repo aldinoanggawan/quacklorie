@@ -12,10 +12,18 @@ export const ProgressDots = ({
   inactiveColor?: string;
 }) => {
   return (
-    <div className="flex justify-center gap-1.5 py-5 pb-2">
+    <div
+      role="progressbar"
+      aria-valuenow={current}
+      aria-valuemin={1}
+      aria-valuemax={total}
+      aria-valuetext={`Step ${current} of ${total}`}
+      className="flex justify-center gap-1.5 py-5 pb-2"
+    >
       {Array.from({ length: total }).map((_, i) => (
         <div
           key={i}
+          aria-hidden="true"
           className="h-2 rounded transition-all duration-300"
           style={{
             width: i + 1 === current ? 22 : 8,

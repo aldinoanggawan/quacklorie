@@ -39,23 +39,25 @@ export const MealsSection = ({ meals }: MealsSectionProps) => {
         Meals today
       </Typography>
 
-      <div className="flex flex-col">
+      <ul className="m-0 flex list-none flex-col p-0">
         {MEAL_ORDER.map((type, i) => {
           const logged = meals.filter((m) => m.meal_type === type);
           const totalKcal = logged.reduce((sum, m) => sum + m.total_kcal, 0);
           const isLogged = logged.length > 0;
 
           return (
-            <div
+            <li
               key={type}
               className={classNames(
                 i === 0 ? 'mt-0 pt-0' : 'mt-1.5 border-t border-line pt-1.5',
               )}
             >
               <div className="flex items-center gap-3">
-                <DotIcon
-                  color={isLogged ? MEAL_COLORS[type] : 'var(--color-line)'}
-                />
+                <span aria-hidden="true">
+                  <DotIcon
+                    color={isLogged ? MEAL_COLORS[type] : 'var(--color-line)'}
+                  />
+                </span>
                 <Typography
                   variant="label"
                   color={isLogged ? 'var(--color-ink)' : 'var(--color-muted)'}
@@ -68,13 +70,16 @@ export const MealsSection = ({ meals }: MealsSectionProps) => {
                     {totalKcal.toLocaleString()} kcal
                   </Typography>
                 ) : (
-                  <LogButton onClick={() => navigate(`/meal/${type}`)} />
+                  <LogButton
+                    ariaLabel={`Log ${MEAL_LABELS[type].toLowerCase()}`}
+                    onClick={() => navigate(`/meal/${type}`)}
+                  />
                 )}
               </div>
-            </div>
+            </li>
           );
         })}
-      </div>
+      </ul>
     </div>
   );
 };

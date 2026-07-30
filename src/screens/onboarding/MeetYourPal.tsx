@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { PulsingDuck } from '../../components/PulsingDuck';
 import { useOnboarding } from '../../store/useOnboarding';
@@ -16,6 +16,7 @@ export const MeetYourPal = () => {
   const { palName, setPalName } = useOnboarding();
   const [name, setName] = useState(palName);
   const inputRef = useRef<HTMLInputElement>(null);
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     const timer = setTimeout(
@@ -39,7 +40,7 @@ export const MeetYourPal = () => {
         <div className="relative flex flex-col items-center rounded-3xl bg-surface-warm py-7 px-6 shadow-card">
           {/* Speech bubble */}
           <motion.div
-            animate={{ y: [0, -4, 0] }}
+            animate={prefersReducedMotion ? undefined : { y: [0, -4, 0] }}
             transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
             className="absolute right-5 top-10 max-w-[100px] rounded-[14px_14px_14px_4px] border-1.5 border-line bg-white py-2 px-3 leading-bubble shadow-float"
           >
@@ -66,12 +67,15 @@ export const MeetYourPal = () => {
         <div>
           <Typography
             variant="input-label"
+            as="label"
+            htmlFor="pal-name"
             color="var(--color-muted)"
             className="mb-1.5 block"
           >
             Give your pal a name
           </Typography>
           <input
+            id="pal-name"
             ref={inputRef}
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -87,6 +91,7 @@ export const MeetYourPal = () => {
             <button
               key={n}
               onClick={() => setName(n)}
+              aria-pressed={name === n}
               className={
                 name === n
                   ? 'cursor-pointer rounded-full border-1.5 border-brand bg-brand py-1.5 px-3.5 font-[inherit] transition-all duration-200'

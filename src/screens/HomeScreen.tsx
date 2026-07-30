@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Typography } from '../components/ui/Typography';
 import { Chip } from '../components/ui/Chip';
 import { MealsSection } from '../components/MealsSection';
@@ -26,6 +26,7 @@ export const HomeScreen = () => {
   const { user } = useAuth();
   const { profile, loading: profileLoading } = useProfile();
   const today = new Date();
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     if (!profileLoading && !profile) navigate('/onboarding');
@@ -42,14 +43,16 @@ export const HomeScreen = () => {
           <Typography variant="label" color={'var(--color-muted)'}>
             {formatDate(today)}
           </Typography>
-          <Typography variant="subheading" color={'var(--color-ink)'}>
+          <Typography variant="subheading" as="h1" color={'var(--color-ink)'}>
             {greeting()}, {profile?.pal_name ?? '…'}
           </Typography>
         </div>
 
         {/* Streak pill */}
         <div className="flex items-center gap-1 rounded-full border-1.5 border-line bg-surface-brand py-1 px-2.5">
-          <span className="text-sm">🔥</span>
+          <span aria-hidden="true" className="text-sm">
+            🔥
+          </span>
           <Typography variant="label-strong" color={'var(--color-ink)'}>
             7 days
           </Typography>
@@ -82,10 +85,11 @@ export const HomeScreen = () => {
           Calories remaining
         </Typography>
 
-        {/* Duck */}
+        {/* Duck — decorative reaction, meaning is already conveyed by the number above */}
         <motion.div
+          aria-hidden="true"
           className="absolute right-4 top-3"
-          animate={{ y: [0, -6, 0] }}
+          animate={prefersReducedMotion ? undefined : { y: [0, -6, 0] }}
           transition={{ duration: 2.5, ease: 'easeInOut', repeat: Infinity }}
         >
           <Duck emotion={duckEmotion(remaining)} size={80} />

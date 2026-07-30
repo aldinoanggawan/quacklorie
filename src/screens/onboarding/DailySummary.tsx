@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Duck } from '../../components/duck/Duck';
 import { OnboardingCTA } from '../../components/OnboardingCTA';
@@ -9,6 +9,7 @@ import { Chip } from '../../components/ui/Chip';
 
 export const DailySummary = () => {
   const navigate = useNavigate();
+  const prefersReducedMotion = useReducedMotion();
 
   return (
     <ScreenContainer>
@@ -43,8 +44,9 @@ export const DailySummary = () => {
 
           {/* Proud duck */}
           <motion.div
+            aria-hidden="true"
             className="absolute right-5 top-2.5"
-            animate={{ y: [0, -8, 0] }}
+            animate={prefersReducedMotion ? undefined : { y: [0, -8, 0] }}
             transition={{ duration: 2.5, ease: 'easeInOut', repeat: Infinity }}
           >
             <Duck emotion="proud" size={90} />
@@ -84,7 +86,10 @@ export const DailySummary = () => {
           {/* Activity row */}
           <div className="mt-5 flex items-center justify-between gap-2 rounded-element border border-success bg-surface-success py-2.5 px-3.5">
             <div className="flex items-center gap-2">
-              <div className="h-2 w-2 shrink-0 rounded-full bg-success" />
+              <div
+                aria-hidden="true"
+                className="h-2 w-2 shrink-0 rounded-full bg-success"
+              />
               <Typography variant="label">Indoor cycling· 45 min</Typography>
             </div>
             <Typography

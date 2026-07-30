@@ -1,5 +1,5 @@
 import { withOpacity } from '../../lib/color';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Duck } from '../../components/duck/Duck';
 import { GlassIcon } from '../../components/icons/GlassIcon';
@@ -18,6 +18,7 @@ const GlassRow = ({ value, total }: { value: number; total: number }) => (
 
 export const StayHydrated = () => {
   const navigate = useNavigate();
+  const prefersReducedMotion = useReducedMotion();
 
   return (
     <ScreenContainer background="var(--color-canvas-water)">
@@ -28,11 +29,14 @@ export const StayHydrated = () => {
       />
 
       <div className="flex flex-1 flex-col justify-center gap-6">
-        {/* Card */}
-        <div className="relative flex min-h-60 flex-col items-center overflow-hidden rounded-3xl border border-line-success bg-surface-water pb-0 pt-20">
+        {/* Card — decorative illustration, meaning is repeated in the text below */}
+        <div
+          aria-hidden="true"
+          className="relative flex min-h-60 flex-col items-center overflow-hidden rounded-3xl border border-line-success bg-surface-water pb-0 pt-20"
+        >
           {/* Swimming duck */}
           <motion.div
-            animate={{ y: [0, -8, 0] }}
+            animate={prefersReducedMotion ? undefined : { y: [0, -8, 0] }}
             transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
           >
             <Duck emotion="swimming" size={110} />
@@ -40,7 +44,7 @@ export const StayHydrated = () => {
 
           {/* 250 ml floating card */}
           <motion.div
-            animate={{ y: [0, -5, 0] }}
+            animate={prefersReducedMotion ? undefined : { y: [0, -5, 0] }}
             transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
             className="absolute right-4 top-4 flex items-center gap-1 rounded-element bg-white py-1.5 px-3.5"
             style={{
@@ -59,7 +63,7 @@ export const StayHydrated = () => {
               height="100"
               viewBox="0 0 600 100"
               preserveAspectRatio="none"
-              animate={{ x: [0, -200] }}
+              animate={prefersReducedMotion ? undefined : { x: [0, -200] }}
               transition={{ duration: 3.5, repeat: Infinity, ease: 'linear' }}
             >
               <rect
@@ -77,8 +81,10 @@ export const StayHydrated = () => {
           </div>
         </div>
 
-        {/* Glass icons */}
-        <GlassRow value={2.5} total={5} />
+        {/* Glass icons — decorative illustration, meaning is repeated in the text below */}
+        <div aria-hidden="true">
+          <GlassRow value={2.5} total={5} />
+        </div>
 
         {/* Text */}
         <div>

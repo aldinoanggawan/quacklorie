@@ -122,7 +122,7 @@ export const AuthScreen = () => {
   };
 
   return (
-    <div className="flex min-h-[100dvh] items-center justify-center bg-canvas py-6 px-4">
+    <main className="flex min-h-[100dvh] items-center justify-center bg-canvas py-6 px-4">
       <div className="flex w-full max-w-sm flex-col items-center gap-6 rounded-3xl border-1.5 border-line bg-white py-8 px-7">
         <Duck emotion={config?.emotion ?? 'grumpy'} size={80} />
 
@@ -137,6 +137,7 @@ export const AuthScreen = () => {
             <motion.button
               key="chip"
               type="button"
+              aria-label={`Change username, currently @${username}`}
               initial={{ opacity: 0, y: -6 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
@@ -183,13 +184,22 @@ export const AuthScreen = () => {
                   autoFocus
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
+                  aria-invalid={!!usernameError}
+                  aria-describedby={
+                    usernameError ? 'username-error' : undefined
+                  }
                   className={classNames(
                     inputClass,
                     usernameError ? 'border-danger' : 'border-line',
                   )}
                 />
                 {usernameError && (
-                  <Typography variant="caption" color={'var(--color-danger)'}>
+                  <Typography
+                    id="username-error"
+                    variant="caption"
+                    color={'var(--color-danger)'}
+                    role="alert"
+                  >
                     {usernameError}
                   </Typography>
                 )}
@@ -219,6 +229,10 @@ export const AuthScreen = () => {
                     }
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    aria-invalid={!!passwordError}
+                    aria-describedby={
+                      passwordError ? 'password-error' : 'password-hint'
+                    }
                     className={classNames(
                       inputClass,
                       'pr-11',
@@ -228,17 +242,30 @@ export const AuthScreen = () => {
                   <button
                     type="button"
                     onClick={() => setShowPassword((v) => !v)}
+                    aria-label={
+                      showPassword ? 'Hide password' : 'Show password'
+                    }
+                    aria-pressed={showPassword}
                     className="absolute right-3 top-1/2 flex -translate-y-1/2 cursor-pointer items-center border-0 bg-transparent p-1 text-muted"
                   >
                     <EyeIcon open={showPassword} size={18} />
                   </button>
                 </div>
                 {passwordError ? (
-                  <Typography variant="caption" color={'var(--color-danger)'}>
+                  <Typography
+                    id="password-error"
+                    variant="caption"
+                    color={'var(--color-danger)'}
+                    role="alert"
+                  >
                     {passwordError}
                   </Typography>
                 ) : (
-                  <Typography variant="caption" color={'var(--color-muted)'}>
+                  <Typography
+                    id="password-hint"
+                    variant="caption"
+                    color={'var(--color-muted)'}
+                  >
                     {config?.passwordHint}
                   </Typography>
                 )}
@@ -251,6 +278,7 @@ export const AuthScreen = () => {
               variant="caption"
               color={'var(--color-danger)'}
               className="text-center"
+              role="alert"
             >
               {formError}
             </Typography>
@@ -259,12 +287,24 @@ export const AuthScreen = () => {
           <Button
             type="submit"
             disabled={loading}
+            aria-busy={loading}
             className={classNames('mt-1', loading && 'opacity-70')}
           >
-            {loading ? '…' : step === 'username' ? 'Continue →' : config?.cta}
+            {loading ? (
+              <>
+                <span aria-hidden="true">…</span>
+                <span className="sr-only">Loading</span>
+              </>
+            ) : step === 'username' ? (
+              <>
+                Continue <span aria-hidden="true">→</span>
+              </>
+            ) : (
+              config?.cta
+            )}
           </Button>
         </form>
       </div>
-    </div>
+    </main>
   );
 };

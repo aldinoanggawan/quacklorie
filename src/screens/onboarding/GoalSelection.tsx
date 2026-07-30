@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Duck, type DuckEmotion } from '../../components/duck/Duck';
 import { GainIcon } from '../../components/icons/GainIcon';
@@ -54,6 +54,7 @@ export const GoalSelection = () => {
   const navigate = useNavigate();
   const { setGoal } = useOnboarding();
   const [selected, setSelected] = useState<GoalId>('lose');
+  const prefersReducedMotion = useReducedMotion();
 
   const selectedGoal = GOALS.find((g) => g.id === selected)!;
 
@@ -74,17 +75,28 @@ export const GoalSelection = () => {
         >
           Step 5 of {selected === 'maintain' ? 5 : 6}
         </Typography>
-        <Typography variant="heading" as="h1" className="mb-7 tracking-heading">
+        <Typography
+          variant="heading"
+          as="h1"
+          id="goal-heading"
+          className="mb-7 tracking-heading"
+        >
           What's your main goal?
         </Typography>
       </div>
 
-      <div className="flex flex-col gap-3">
+      <div
+        role="radiogroup"
+        aria-labelledby="goal-heading"
+        className="flex flex-col gap-3"
+      >
         {GOALS.map((goal, i) => (
           <SelectionCard
             key={goal.id}
+            name="goal"
+            value={goal.id}
             isSelected={selected === goal.id}
-            onClick={() => setSelected(goal.id)}
+            onSelect={() => setSelected(goal.id)}
             icon={goal.icon}
             iconBg={goal.iconBg}
             label={goal.label}
@@ -94,17 +106,20 @@ export const GoalSelection = () => {
         ))}
       </div>
 
-      {/* Duck */}
-      <div className="mt-12 flex flex-1 items-start justify-center pb-2">
+      {/* Duck — decorative reaction, meaning is repeated in each option's subtitle */}
+      <div
+        aria-hidden="true"
+        className="mt-12 flex flex-1 items-start justify-center pb-2"
+      >
         <motion.div
-          animate={{ y: [0, -8, 0] }}
+          animate={prefersReducedMotion ? undefined : { y: [0, -8, 0] }}
           transition={{ duration: 2.5, ease: 'easeInOut', repeat: Infinity }}
         >
           <Duck emotion={selectedGoal.emotion} size={110} />
         </motion.div>
       </div>
 
-      <OnboardingCTA onClick={handleNext} label="Let's go →" />
+      <OnboardingCTA onClick={handleNext} label="Let's go" />
     </ScreenContainer>
   );
 };

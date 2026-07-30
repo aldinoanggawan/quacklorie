@@ -29,7 +29,16 @@ export const Stepper = ({
 }) => {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState('');
-  const inputRef = useRef<HTMLInputElement>(null);
+  const editingRef = useRef(false);
+  const id = label.toLowerCase().replace(/\s+/g, '-');
+  const unitId = `${id}-unit`;
+
+  // editingRef mirrors `editing` but updates synchronously, so onBlur can
+  // read the current value even when it fires re-entrantly (see cancelEdit).
+  const updateEditing = (next: boolean) => {
+    editingRef.current = next;
+    setEditing(next);
+  };
 
   const update = (direction: -1 | 1) => {
     let next: number;
@@ -43,24 +52,31 @@ export const Stepper = ({
     onChange(Number(clamp(next, min, max).toFixed(1)));
   };
 
-  const startEditing = () => {
+  const beginEdit = () => {
     setDraft(formatter(value));
-    setEditing(true);
-    setTimeout(() => inputRef.current?.select(), 0);
+    updateEditing(true);
   };
 
-  const commitEdit = () => {
+  const confirmEdit = (input: HTMLInputElement) => {
     const parsed = parseFloat(draft);
     if (!isNaN(parsed)) {
       onChange(Number(clamp(parsed, min, max).toFixed(1)));
     }
-    setEditing(false);
+    updateEditing(false);
+    input.blur();
+  };
+
+  const cancelEdit = (input: HTMLInputElement) => {
+    updateEditing(false);
+    input.blur();
   };
 
   return (
     <div className="box-border rounded-element border-1.5 border-line bg-white py-2.5 px-3.5">
       <Typography
         variant="caption"
+        as="label"
+        htmlFor={id}
         color={'var(--color-muted)'}
         className="mb-1.5 block uppercase tracking-em"
       >
@@ -77,34 +93,32 @@ export const Stepper = ({
           <StepperIcon type="minus" />
         </button>
         <div className="text-center tabular-nums">
-          {editing ? (
-            <input
-              ref={inputRef}
-              type="number"
-              value={draft}
-              min={min}
-              max={max}
-              step={step}
-              onChange={(e) => setDraft(e.target.value)}
-              onBlur={commitEdit}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') commitEdit();
-                if (e.key === 'Escape') setEditing(false);
-              }}
-              className="m-0 block h-4 w-14 appearance-none border-0 bg-transparent p-0 text-center text-input font-medium leading-none outline-none [box-sizing:content-box] [font-family:inherit] [font-variant-numeric:tabular-nums] [MozAppearance:textfield] [WebkitAppearance:none]"
-            />
-          ) : (
-            <Typography
-              variant="input"
-              as="p"
-              onClick={startEditing}
-              className="m-0 cursor-text leading-none tabular-nums"
-            >
-              {formatter(value)}
-            </Typography>
-          )}
+          <input
+            id={id}
+            type="number"
+            value={editing ? draft : formatter(value)}
+            min={min}
+            max={max}
+            step={step}
+            readOnly={!editing}
+            aria-describedby={unitId}
+            onFocus={(e) => {
+              beginEdit();
+              e.target.select();
+            }}
+            onChange={(e) => setDraft(e.target.value)}
+            onBlur={(e) => {
+              if (editingRef.current) confirmEdit(e.currentTarget);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') confirmEdit(e.currentTarget);
+              if (e.key === 'Escape') cancelEdit(e.currentTarget);
+            }}
+            className="m-0 block h-4 w-14 appearance-none border-0 bg-transparent p-0 text-center text-input font-medium leading-none outline-none cursor-text [box-sizing:content-box] [font-family:inherit] [font-variant-numeric:tabular-nums] [MozAppearance:textfield] [WebkitAppearance:none]"
+          />
           <Typography
             variant="caption"
+            id={unitId}
             color={'var(--color-muted)'}
             className="mt-px block"
           >
