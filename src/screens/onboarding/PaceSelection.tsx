@@ -9,6 +9,7 @@ import { Typography } from '../../components/ui/Typography';
 import { ProgressDots } from '../../components/ProgressDots';
 import { useOnboarding } from '../../store/useOnboarding';
 import type { PaceId } from '../../types/models';
+import { PACE_LABELS } from '../../lib/profileOptions';
 
 interface Pace {
   id: PaceId;
@@ -22,21 +23,21 @@ const PACES: Pace[] = [
   {
     id: 'slow',
     emoji: '🐢',
-    label: 'Slow & sustainable',
+    label: PACE_LABELS.slow,
     subtitle: 'Gentle pace · lower risk of burnout',
     emotion: 'happy',
   },
   {
     id: 'balanced',
     emoji: '⚖️',
-    label: 'Balanced',
+    label: PACE_LABELS.balanced,
     subtitle: 'Recommended · steady and realistic',
     emotion: 'proud',
   },
   {
     id: 'fast',
     emoji: '⚡',
-    label: 'Faster results',
+    label: PACE_LABELS.fast,
     subtitle: 'Faster results · higher effort',
     emotion: 'determined',
   },
