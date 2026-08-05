@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ConfirmSheet } from '../../components/ConfirmSheet';
 import { Duck } from '../../components/duck/Duck';
 import { ChevronIcon } from '../../components/icons/ChevronIcon';
 import { ScreenContainer } from '../../components/ScreenContainer';
@@ -12,11 +14,12 @@ export const ProfileScreen = () => {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
   const { profile } = useProfile();
+  const [confirmingLogOut, setConfirmingLogOut] = useState(false);
 
   const goalLabel = profile ? GOAL_LABELS[profile.goal_type] : '…';
 
-  const handleLogOut = async () => {
-    if (!window.confirm('Log out of Quackies?')) return;
+  const handleConfirmLogOut = async () => {
+    setConfirmingLogOut(false);
     await signOut();
   };
 
@@ -89,7 +92,7 @@ export const ProfileScreen = () => {
 
       <button
         type="button"
-        onClick={handleLogOut}
+        onClick={() => setConfirmingLogOut(true)}
         className="mt-4 w-full cursor-pointer rounded-pill border-1.5 border-danger bg-white py-3.5 font-[inherit] transition-colors duration-150 hover:bg-[rgba(232,64,96,0.08)]"
       >
         <Typography
@@ -100,6 +103,15 @@ export const ProfileScreen = () => {
           Log out
         </Typography>
       </button>
+
+      <ConfirmSheet
+        open={confirmingLogOut}
+        title="Log out of Quackies?"
+        confirmLabel="Log out"
+        danger
+        onConfirm={handleConfirmLogOut}
+        onCancel={() => setConfirmingLogOut(false)}
+      />
     </ScreenContainer>
   );
 };
