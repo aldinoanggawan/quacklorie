@@ -11,7 +11,11 @@ import { Spinner } from '../../components/Spinner';
 import { useAuth } from '../../hooks/useAuth';
 import { useProfile } from '../../hooks/useProfile';
 import { analyzeMeal, saveMeal, getRemainingAnalyses } from '../../lib/db';
-import type { MealType, AnalysisResult, AnalysisItem } from '../../types/models';
+import type {
+  MealType,
+  AnalysisResult,
+  AnalysisItem,
+} from '../../types/models';
 import { classNames } from '../../lib/classNames';
 
 const inputClass =
