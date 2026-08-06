@@ -5,6 +5,7 @@ import { Duck } from '../../components/duck/Duck';
 import { FemaleIcon } from '../../components/icons/FemaleIcon';
 import { MaleIcon } from '../../components/icons/MaleIcon';
 import { OnboardingCTA } from '../../components/OnboardingCTA';
+import { RadioGroupSection } from '../../components/RadioGroupSection';
 import { ScreenContainer } from '../../components/ScreenContainer';
 import { Stepper } from '../../components/Stepper';
 import { Typography } from '../../components/ui/Typography';
@@ -13,35 +14,12 @@ import type { ActivityLevel, Sex } from '../../types/models';
 import { useAuth, getUsername } from '../../hooks/useAuth';
 import { saveProfile } from '../../lib/db';
 import { calculateDailyBudget, calculateTdee } from '../../lib/tdee';
-
-const ACTIVITY_OPTIONS: {
-  id: ActivityLevel;
-  label: string;
-  subtitle: string;
-}[] = [
-  {
-    id: 'sedentary',
-    label: 'Sedentary',
-    subtitle: 'Desk job, little to no exercise',
-  },
-  {
-    id: 'light',
-    label: 'Lightly active',
-    subtitle: '2–3 workouts/week e.g. spin, pilates, yoga',
-  },
-  {
-    id: 'moderate',
-    label: 'Moderately active',
-    subtitle: '4–5 sessions/week + active daily life',
-  },
-  {
-    id: 'very',
-    label: 'Very active',
-    subtitle: 'Daily intense training or physical job',
-  },
-];
-
-const formatWeight = (value: number) => value.toFixed(1);
+import {
+  ACTIVITY_OPTIONS,
+  formatWeight,
+  GOAL_LABELS,
+  SEX_LABELS,
+} from '../../lib/profileOptions';
 
 const SexIcon = ({ sex }: { sex: Sex }) =>
   sex === 'male' ? <MaleIcon /> : <FemaleIcon />;
@@ -71,12 +49,7 @@ export const ProfileSetup = () => {
     () => calculateDailyBudget({ tdee, weightKg, heightCm, sex, goal, pace }),
     [tdee, weightKg, heightCm, sex, goal, pace],
   );
-  const goalLabel =
-    goal === 'gain'
-      ? 'Gain weight'
-      : goal === 'maintain'
-        ? 'Maintain weight'
-        : 'Lose weight';
+  const goalLabel = GOAL_LABELS[goal];
   const budgetSub =
     rawAdjustment === 0
       ? 'Maintenance budget applied'
@@ -188,68 +161,20 @@ export const ProfileSetup = () => {
                 <SexIcon sex={option} />
               </span>
               <Typography variant="label" color={'var(--color-muted)'}>
-                {option === 'male' ? 'Male' : 'Female'}
+                {SEX_LABELS[option]}
               </Typography>
             </label>
           );
         })}
       </div>
 
-      <section>
-        <Typography
-          variant="label-strong"
-          as="p"
-          id="activity-level-heading"
-          color={'var(--color-muted)'}
-          className="mb-1.5"
-        >
-          Activity level
-        </Typography>
-        <div
-          role="radiogroup"
-          aria-labelledby="activity-level-heading"
-          className="flex flex-col gap-2"
-        >
-          {ACTIVITY_OPTIONS.map((option) => {
-            const isSelected = activityLevel === option.id;
-            return (
-              <label
-                key={option.id}
-                className={
-                  isSelected
-                    ? 'flex cursor-pointer items-center gap-3.5 rounded-element border-1.5 border-brand bg-surface-brand py-2.5 px-3.5 text-left [font-family:inherit] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-brand has-[:focus-visible]:ring-offset-2'
-                    : 'flex cursor-pointer items-center gap-3.5 rounded-element border-1.5 border-line bg-white py-2.5 px-3.5 text-left [font-family:inherit] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-brand has-[:focus-visible]:ring-offset-2'
-                }
-              >
-                <input
-                  type="radio"
-                  name="activity-level"
-                  value={option.id}
-                  checked={isSelected}
-                  onChange={() => setActivityLevel(option.id)}
-                  className="sr-only"
-                />
-                <span
-                  aria-hidden="true"
-                  className={
-                    isSelected
-                      ? 'box-border h-2.5 w-2.5 shrink-0 rounded-full border-2 border-brand bg-brand shadow-[inset_0_0_0_4px_var(--color-brand)]'
-                      : 'box-border h-2.5 w-2.5 shrink-0 rounded-full border-2 border-line bg-white'
-                  }
-                />
-                <span className="flex-1">
-                  <Typography variant="label" className="block">
-                    {option.label}
-                  </Typography>
-                  <Typography variant="caption" color={'var(--color-muted)'}>
-                    {option.subtitle}
-                  </Typography>
-                </span>
-              </label>
-            );
-          })}
-        </div>
-      </section>
+      <RadioGroupSection
+        label="Activity level"
+        name="activity-level"
+        options={ACTIVITY_OPTIONS}
+        value={activityLevel}
+        onChange={setActivityLevel}
+      />
 
       <div className="flex items-center justify-between rounded-2xl border-1.5 border-line-brand bg-surface-brand py-3 px-4">
         <div>

@@ -19,6 +19,9 @@ import { ProfileSetup } from './screens/onboarding/ProfileSetup';
 import { HomeScreen } from './screens/HomeScreen';
 import { MealLoggingScreen } from './screens/MealLoggingScreen';
 import { AuthScreen } from './screens/auth/AuthScreen';
+import { ProfileScreen } from './screens/profile/ProfileScreen';
+import { EditPasswordScreen } from './screens/profile/EditPasswordScreen';
+import { EditGoalsScreen } from './screens/profile/EditGoalsScreen';
 import { BottomNav } from './components/BottomNav';
 const MainLayout = () => (
   <>
@@ -60,8 +63,10 @@ export const App = () => {
                 path="/progress"
                 element={<Placeholder name="Progress" />}
               />
-              <Route path="/profile" element={<Placeholder name="Profile" />} />
+              <Route path="/profile" element={<ProfileScreen />} />
             </Route>
+            <Route path="/profile/password" element={<EditPasswordScreen />} />
+            <Route path="/profile/goals" element={<EditGoalsScreen />} />
           </Route>
         </Routes>
       </BrowserRouter>

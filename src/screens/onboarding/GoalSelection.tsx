@@ -11,6 +11,7 @@ import { SelectionCard } from '../../components/SelectionCard';
 import { Typography } from '../../components/ui/Typography';
 import { ProgressDots } from '../../components/ProgressDots';
 import { useOnboarding } from '../../store/useOnboarding';
+import { GOAL_LABELS } from '../../lib/profileOptions';
 
 type GoalId = 'lose' | 'maintain' | 'gain';
 
@@ -26,7 +27,7 @@ interface Goal {
 const GOALS: Goal[] = [
   {
     id: 'lose',
-    label: 'Lose weight',
+    label: GOAL_LABELS.lose,
     subtitle: 'Calorie deficit · duck gets determined',
     emotion: 'determined',
     icon: <LoseIcon />,
@@ -34,7 +35,7 @@ const GOALS: Goal[] = [
   },
   {
     id: 'maintain',
-    label: 'Maintain weight',
+    label: GOAL_LABELS.maintain,
     subtitle: 'At TDEE · duck stays happy',
     emotion: 'proud',
     icon: <MaintainIcon />,
@@ -42,7 +43,7 @@ const GOALS: Goal[] = [
   },
   {
     id: 'gain',
-    label: 'Gain weight',
+    label: GOAL_LABELS.gain,
     subtitle: 'Calorie surplus · duck gets excited',
     emotion: 'excited',
     icon: <GainIcon />,

@@ -161,7 +161,7 @@ export const MealLoggingScreen = () => {
           setLimit(limit);
         })
         .catch(console.error);
-      navigate(-1);
+      navigate('/home');
     } catch (err) {
       console.error('Failed to save meal:', err);
     } finally {
@@ -185,7 +185,7 @@ export const MealLoggingScreen = () => {
         <button
           type="button"
           aria-label="Go back"
-          onClick={() => navigate(-1)}
+          onClick={() => navigate('/home')}
           className="cursor-pointer border-0 bg-transparent py-1 pr-2 text-2xl leading-none text-ink"
         >
           ←
