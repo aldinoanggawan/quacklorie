@@ -1,18 +1,22 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ScreenContainer } from '../components/ScreenContainer';
-import { Button } from '../components/Button';
-import { Duck } from '../components/duck/Duck';
-import type { DuckEmotion } from '../components/duck/Duck';
-import { Typography } from '../components/ui/Typography';
-import { UploadZone } from '../components/UploadZone';
-import { Spinner } from '../components/Spinner';
-import { useAuth } from '../hooks/useAuth';
-import { useProfile } from '../hooks/useProfile';
-import { analyzeMeal, saveMeal, getRemainingAnalyses } from '../lib/db';
-import type { MealType, AnalysisResult, AnalysisItem } from '../types/models';
-import { classNames } from '../lib/classNames';
+import { ScreenContainer } from '../../components/ScreenContainer';
+import { Button } from '../../components/Button';
+import { Duck } from '../../components/duck/Duck';
+import type { DuckEmotion } from '../../components/duck/Duck';
+import { Typography } from '../../components/ui/Typography';
+import { UploadZone } from '../../components/UploadZone';
+import { Spinner } from '../../components/Spinner';
+import { useAuth } from '../../hooks/useAuth';
+import { useProfile } from '../../hooks/useProfile';
+import { analyzeMeal, saveMeal, getRemainingAnalyses } from '../../lib/db';
+import type {
+  MealType,
+  AnalysisResult,
+  AnalysisItem,
+} from '../../types/models';
+import { classNames } from '../../lib/classNames';
 
 const inputClass =
   'rounded-2xl border border-line bg-surface-warm text-body font-medium text-ink outline-none [color-scheme:light] [font-family:inherit]';

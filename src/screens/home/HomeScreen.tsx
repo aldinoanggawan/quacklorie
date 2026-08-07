@@ -1,18 +1,18 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
-import { Typography } from '../components/ui/Typography';
-import { Chip } from '../components/ui/Chip';
-import { MealsSection } from '../components/MealsSection';
-import { WorkoutSection } from '../components/WorkoutSection';
-import { HydrationSection } from '../components/HydrationSection';
-import { ScreenContainer } from '../components/ScreenContainer';
-import { Duck } from '../components/duck/Duck';
-import type { DuckEmotion } from '../components/duck/Duck';
-import { useAuth } from '../hooks/useAuth';
-import { useProfile } from '../hooks/useProfile';
-import { useDailySummary } from '../hooks/useDailySummary';
-import { formatDate, greeting } from '../lib/dateHelpers';
+import { Typography } from '../../components/ui/Typography';
+import { Chip } from '../../components/ui/Chip';
+import { MealsSection } from '../../components/MealsSection';
+import { WorkoutSection } from '../../components/WorkoutSection';
+import { HydrationSection } from '../../components/HydrationSection';
+import { ScreenContainer } from '../../components/ScreenContainer';
+import { Duck } from '../../components/duck/Duck';
+import type { DuckEmotion } from '../../components/duck/Duck';
+import { useAuth } from '../../hooks/useAuth';
+import { useProfile } from '../../hooks/useProfile';
+import { useDailySummary } from '../../hooks/useDailySummary';
+import { formatDate, greeting } from '../../lib/dateHelpers';
 
 const duckEmotion = (remaining: number): DuckEmotion => {
   if (Math.abs(remaining) <= 50) return 'proud';
