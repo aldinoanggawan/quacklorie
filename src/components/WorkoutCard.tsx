@@ -40,7 +40,7 @@ export const WorkoutCard = ({ workout, onSaved }: WorkoutCardProps) => {
   };
 
   return (
-    <div className="overflow-hidden rounded-2xl border-1.5 border-line-success bg-surface-success">
+    <EntryCard tone="success">
       <div className="flex items-center gap-3 py-3 px-3.5">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-control bg-success">
           <ActivityIcon size={20} />
@@ -183,6 +183,6 @@ export const WorkoutCard = ({ workout, onSaved }: WorkoutCardProps) => {
           )}
         </div>
       )}
-    </div>
+    </EntryCard>
   );
 };
