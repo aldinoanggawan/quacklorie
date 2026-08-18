@@ -26,8 +26,8 @@ export const ProfileScreen = () => {
   return (
     <ScreenContainer className="gap-5 pt-10">
       <header className="flex items-center gap-4">
-        <Duck emotion="happy" size={64} />
-        <Typography variant="heading-lg" as="h1">
+        <Duck emotion="happy" size={64} className="shrink-0" />
+        <Typography variant="subheading" as="h1" className="min-w-0 truncate">
           @{getUsername(user)}
         </Typography>
       </header>

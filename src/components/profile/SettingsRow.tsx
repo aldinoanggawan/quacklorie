@@ -16,9 +16,15 @@ export const SettingsRow = ({
 }) => {
   const content = (
     <>
-      <Typography variant="title">{label}</Typography>
-      <span className="flex items-center gap-2">
-        <Typography variant="label" color={'var(--color-muted)'}>
+      <Typography variant="title" className="shrink-0">
+        {label}
+      </Typography>
+      <span className="flex min-w-0 items-center gap-2">
+        <Typography
+          variant="label"
+          color={'var(--color-muted)'}
+          className="truncate"
+        >
           {value}
         </Typography>
         {onClick && <ChevronIcon />}
