@@ -12,6 +12,7 @@ type Variant =
   | 'input'
   | 'label-strong'
   | 'label'
+  | 'body-sm'
   | 'caption';
 
 const CLASSES: Record<Variant, string> = {
@@ -25,6 +26,7 @@ const CLASSES: Record<Variant, string> = {
   input: 'text-input font-medium',
   'label-strong': 'text-label font-semibold',
   label: 'text-label font-medium',
+  'body-sm': 'text-label font-normal',
   caption: 'text-caption font-normal',
 };
 
@@ -39,6 +41,7 @@ const DEFAULTS: Record<Variant, string> = {
   input: 'span',
   'label-strong': 'span',
   label: 'span',
+  'body-sm': 'span',
   caption: 'span',
 };
 
