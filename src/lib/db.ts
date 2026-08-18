@@ -115,6 +115,48 @@ export const getWaterForDate = async (
   return data ?? [];
 };
 
+export const getMealsByDateRange = async (
+  userId: string,
+  startDate: string,
+  endDate: string,
+): Promise<Meal[]> => {
+  const { data, error } = await supabase
+    .from('meals')
+    .select('*')
+    .eq('user_id', userId)
+    .gte('date', startDate)
+    .lte('date', endDate)
+    .order('date', { ascending: false });
+  if (error) throw error;
+  return data ?? [];
+};
+
+export const deleteMeal = async (id: string): Promise<void> => {
+  const { error } = await supabase.from('meals').delete().eq('id', id);
+  if (error) throw error;
+};
+
+export const getWaterByDateRange = async (
+  userId: string,
+  startDate: string,
+  endDate: string,
+): Promise<WaterLog[]> => {
+  const { data, error } = await supabase
+    .from('water_logs')
+    .select('*')
+    .eq('user_id', userId)
+    .gte('date', startDate)
+    .lte('date', endDate)
+    .order('date', { ascending: false });
+  if (error) throw error;
+  return data ?? [];
+};
+
+export const deleteWaterLog = async (id: string): Promise<void> => {
+  const { error } = await supabase.from('water_logs').delete().eq('id', id);
+  if (error) throw error;
+};
+
 export const getBottleConfig = async (
   userId: string,
 ): Promise<BottleConfig | null> => {
@@ -169,6 +211,27 @@ export const getWorkoutsForDate = async (
     .eq('date', date);
   if (error) throw error;
   return data ?? [];
+};
+
+export const getWorkoutsByDateRange = async (
+  userId: string,
+  startDate: string,
+  endDate: string,
+): Promise<Workout[]> => {
+  const { data, error } = await supabase
+    .from('workouts')
+    .select('*')
+    .eq('user_id', userId)
+    .gte('date', startDate)
+    .lte('date', endDate)
+    .order('date', { ascending: false });
+  if (error) throw error;
+  return data ?? [];
+};
+
+export const deleteWorkout = async (id: string): Promise<void> => {
+  const { error } = await supabase.from('workouts').delete().eq('id', id);
+  if (error) throw error;
 };
 
 export const getRemainingAnalyses = async (
