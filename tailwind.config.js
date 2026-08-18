@@ -39,6 +39,7 @@ export default {
       borderRadius: {
         control: '10px',
         element: '14px',
+        'card-sm': '16px',
         card: '20px',
         pill: '50px',
       },
