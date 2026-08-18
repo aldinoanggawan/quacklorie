@@ -79,7 +79,7 @@ export const HydrationSection = ({ date }: HydrationSectionProps) => {
       </div>
 
       {bottleConfig && (
-        <div className="flex items-center gap-3.5 rounded-2xl border-1.5 border-line-success bg-surface-water py-3.5 px-4">
+        <div className="flex items-center gap-3.5 rounded-card border-1.5 border-line-success bg-surface-water py-3.5 px-4">
           <div
             aria-hidden="true"
             className="flex flex-1 flex-wrap items-end gap-1"

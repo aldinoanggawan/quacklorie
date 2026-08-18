@@ -1,15 +1,22 @@
 import { useState } from 'react';
 import { Typography } from './ui/Typography';
+import { EntryCard } from './EntryCard';
 import { ActivityIcon } from './icons/ActivityIcon';
+import { TrashIcon } from './icons/TrashIcon';
 import { updateWorkout } from '../lib/db';
 import type { Workout } from '../types/models';
 
 interface WorkoutCardProps {
   workout: Workout;
   onSaved?: () => void;
+  onDelete?: () => void;
 }
 
-export const WorkoutCard = ({ workout, onSaved }: WorkoutCardProps) => {
+export const WorkoutCard = ({
+  workout,
+  onSaved,
+  onDelete,
+}: WorkoutCardProps) => {
   const isEstimated = workout.source === 'estimated';
   const estimate = isEstimated ? (workout.kcal_burned ?? 0) : 0;
   const storedValue = String(workout.kcal_burned ?? estimate);
@@ -40,7 +47,7 @@ export const WorkoutCard = ({ workout, onSaved }: WorkoutCardProps) => {
   };
 
   return (
-    <div className="overflow-hidden rounded-2xl border-1.5 border-line-success bg-surface-success">
+    <EntryCard tone="success">
       <div className="flex items-center gap-3 py-3 px-3.5">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-control bg-success">
           <ActivityIcon size={20} />
@@ -68,15 +75,27 @@ export const WorkoutCard = ({ workout, onSaved }: WorkoutCardProps) => {
               −{workout.kcal_burned.toLocaleString()} kcal
             </Typography>
           )}
-          <button
-            type="button"
-            onClick={() => (expanded ? handleCancel() : setExpanded(true))}
-            className="cursor-pointer border-0 bg-transparent p-0 font-[inherit]"
-          >
-            <Typography variant="label-strong" color={'var(--color-brand)'}>
-              {expanded ? 'cancel' : 'edit'}
-            </Typography>
-          </button>
+          <div className="flex items-center gap-2.5">
+            {onDelete && (
+              <button
+                type="button"
+                aria-label="Delete workout"
+                onClick={onDelete}
+                className="cursor-pointer border-0 bg-transparent p-0"
+              >
+                <TrashIcon size={15} color={'var(--color-muted)'} />
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => (expanded ? handleCancel() : setExpanded(true))}
+              className="cursor-pointer border-0 bg-transparent p-0 font-[inherit]"
+            >
+              <Typography variant="label-strong" color={'var(--color-brand)'}>
+                {expanded ? 'cancel' : 'edit'}
+              </Typography>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -183,6 +202,6 @@ export const WorkoutCard = ({ workout, onSaved }: WorkoutCardProps) => {
           )}
         </div>
       )}
-    </div>
+    </EntryCard>
   );
 };

@@ -60,7 +60,7 @@ export const HomeScreen = () => {
       </div>
 
       {/* Hero card */}
-      <div className="relative overflow-visible rounded-3xl border border-line bg-white p-6 pb-5 shadow-card">
+      <div className="relative overflow-visible rounded-card border border-line bg-white p-6 pb-5 shadow-card">
         {/* Big number */}
         <div className="flex items-baseline gap-1.5 pr-24">
           <Typography
