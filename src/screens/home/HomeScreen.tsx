@@ -9,9 +9,11 @@ import { HydrationSection } from '../../components/HydrationSection';
 import { ScreenContainer } from '../../components/ScreenContainer';
 import { Duck } from '../../components/duck/Duck';
 import type { DuckEmotion } from '../../components/duck/Duck';
+import { Spinner } from '../../components/Spinner';
 import { useAuth } from '../../hooks/useAuth';
 import { useProfile } from '../../hooks/useProfile';
 import { useDailySummary } from '../../hooks/useDailySummary';
+import { useWeeklyStreak } from '../../hooks/useWeeklyStreak';
 import { formatDate, greeting } from '../../lib/dateHelpers';
 
 const duckEmotion = (remaining: number): DuckEmotion => {
@@ -34,6 +36,11 @@ export const HomeScreen = () => {
 
   const { meals, workouts, eaten, burned, remaining, refresh } =
     useDailySummary(profile?.tdee ?? 0, today);
+  const {
+    daysLogged,
+    totalDays,
+    loading: streakLoading,
+  } = useWeeklyStreak(today);
 
   return (
     <ScreenContainer background={'var(--color-canvas)'} className="gap-5 pt-10">
@@ -50,12 +57,26 @@ export const HomeScreen = () => {
 
         {/* Streak pill */}
         <div className="flex items-center gap-1 rounded-full border-1.5 border-line bg-surface-brand py-1 px-2.5">
-          <span aria-hidden="true" className="text-sm">
-            🔥
-          </span>
-          <Typography variant="label-strong" color={'var(--color-ink)'}>
-            7 days
-          </Typography>
+          {streakLoading ? (
+            <Spinner
+              size={14}
+              color="var(--color-ink)"
+              trackColor="rgba(0, 0, 0, 0.15)"
+            />
+          ) : (
+            <>
+              <span
+                aria-hidden="true"
+                className="text-sm"
+                style={{ opacity: daysLogged > 0 ? 1 : 0.35 }}
+              >
+                🔥
+              </span>
+              <Typography variant="label-strong" color={'var(--color-ink)'}>
+                {daysLogged}/{totalDays} days
+              </Typography>
+            </>
+          )}
         </div>
       </div>
 

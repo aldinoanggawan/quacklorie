@@ -131,6 +131,21 @@ export const getMealsByDateRange = async (
   return data ?? [];
 };
 
+export const getMealDatesByDateRange = async (
+  userId: string,
+  startDate: string,
+  endDate: string,
+): Promise<string[]> => {
+  const { data, error } = await supabase
+    .from('meals')
+    .select('date')
+    .eq('user_id', userId)
+    .gte('date', startDate)
+    .lte('date', endDate);
+  if (error) throw error;
+  return (data ?? []).map((row) => row.date);
+};
+
 export const deleteMeal = async (id: string): Promise<void> => {
   const { error } = await supabase.from('meals').delete().eq('id', id);
   if (error) throw error;
