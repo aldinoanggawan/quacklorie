@@ -4,6 +4,7 @@ import { AnimatePresence } from 'framer-motion';
 import { ScreenContainer } from '../../components/ScreenContainer';
 import { ScreenHeader } from '../../components/ScreenHeader';
 import { Typography } from '../../components/ui/Typography';
+import { Pill } from '../../components/ui/Pill';
 import { LimitReachedPanel } from '../../components/meal-logging/LimitReachedPanel';
 import { MealUploadForm } from '../../components/meal-logging/MealUploadForm';
 import { MealAnalysisResults } from '../../components/meal-logging/MealAnalysisResults';
@@ -23,6 +24,7 @@ export const MealLoggingScreen = () => {
   const {
     remaining,
     limit,
+    loading: remainingLoading,
     refresh: refreshRemaining,
   } = useRemainingAnalyses(user);
   const analysis = useMealAnalysis();
@@ -56,29 +58,26 @@ export const MealLoggingScreen = () => {
   return (
     <ScreenContainer background={'var(--color-canvas)'} className="gap-5 pt-10">
       <ScreenHeader title={`Log ${mealType}`} onBack={() => navigate('/home')}>
-        {remaining !== null && (
-          <div
-            role="group"
-            aria-label={`${remaining} of ${limit} analyses remaining today`}
-            className="flex items-center gap-1 rounded-full border-1.5 border-line bg-surface-brand py-1 px-2.5"
+        <Pill
+          loading={remainingLoading}
+          ariaLabel={`${remaining} of ${limit} analyses remaining today`}
+        >
+          <span aria-hidden="true" className="text-sm">
+            ✦
+          </span>
+          <Typography
+            variant="label-strong"
+            color={
+              remaining === 0
+                ? 'var(--color-danger)'
+                : remaining !== null && remaining <= 2
+                  ? 'var(--color-brand)'
+                  : 'var(--color-ink)'
+            }
           >
-            <span aria-hidden="true" className="text-xs">
-              ✦
-            </span>
-            <Typography
-              variant="label-strong"
-              color={
-                remaining === 0
-                  ? 'var(--color-danger)'
-                  : remaining <= 2
-                    ? 'var(--color-brand)'
-                    : 'var(--color-ink)'
-              }
-            >
-              {remaining} / {limit}
-            </Typography>
-          </div>
-        )}
+            {remaining} / {limit}
+          </Typography>
+        </Pill>
       </ScreenHeader>
 
       <AnimatePresence mode="wait">

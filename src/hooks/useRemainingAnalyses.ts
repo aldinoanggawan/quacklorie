@@ -5,6 +5,7 @@ import type { User } from '@supabase/supabase-js';
 export const useRemainingAnalyses = (user: User | null) => {
   const [remaining, setRemaining] = useState<number | null>(null);
   const [limit, setLimit] = useState(10);
+  const [loading, setLoading] = useState(true);
 
   const refresh = useCallback(() => {
     if (!user) return;
@@ -13,12 +14,13 @@ export const useRemainingAnalyses = (user: User | null) => {
         setRemaining(remaining);
         setLimit(limit);
       })
-      .catch(console.error);
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, [user]);
 
   useEffect(() => {
     refresh();
   }, [refresh]);
 
-  return { remaining, limit, refresh };
+  return { remaining, limit, loading, refresh };
 };
