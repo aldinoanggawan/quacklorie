@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { ScreenContainer } from '../../components/ScreenContainer';
+import { ScreenHeader } from '../../components/ScreenHeader';
 import { Typography } from '../../components/ui/Typography';
 import { LimitReachedPanel } from '../../components/meal-logging/LimitReachedPanel';
 import { MealUploadForm } from '../../components/meal-logging/MealUploadForm';
@@ -54,23 +55,7 @@ export const MealLoggingScreen = () => {
 
   return (
     <ScreenContainer background={'var(--color-canvas)'} className="gap-5 pt-10">
-      <div className="flex items-center gap-3">
-        <button
-          type="button"
-          aria-label="Go back"
-          onClick={() => navigate('/home')}
-          className="cursor-pointer border-0 bg-transparent py-1 pr-2 text-2xl leading-none text-ink"
-        >
-          ←
-        </button>
-        <Typography
-          variant="subheading"
-          as="h1"
-          color={'var(--color-ink)'}
-          className="flex-1"
-        >
-          Log {mealType}
-        </Typography>
+      <ScreenHeader title={`Log ${mealType}`} onBack={() => navigate('/home')}>
         {remaining !== null && (
           <div
             role="group"
@@ -94,7 +79,7 @@ export const MealLoggingScreen = () => {
             </Typography>
           </div>
         )}
-      </div>
+      </ScreenHeader>
 
       <AnimatePresence mode="wait">
         {!analysis.result && remaining === 0 ? (

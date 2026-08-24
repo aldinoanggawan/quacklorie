@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ScreenContainer } from '../../components/ScreenContainer';
+import { ScreenHeader } from '../../components/ScreenHeader';
 import { Button } from '../../components/Button';
 import { Typography } from '../../components/ui/Typography';
 import { EyeIcon } from '../../components/icons/EyeIcon';
@@ -61,19 +62,7 @@ export const EditPasswordScreen = () => {
 
   return (
     <ScreenContainer className="gap-5 pt-10">
-      <div className="flex items-center gap-3">
-        <button
-          type="button"
-          aria-label="Go back"
-          onClick={() => navigate('/profile')}
-          className="cursor-pointer border-0 bg-transparent py-1 pr-2 text-2xl leading-none text-ink"
-        >
-          ←
-        </button>
-        <Typography variant="subheading" as="h1" className="flex-1">
-          Password
-        </Typography>
-      </div>
+      <ScreenHeader title="Password" onBack={() => navigate('/profile')} />
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4" noValidate>
         <div className="flex flex-col gap-1.5">
