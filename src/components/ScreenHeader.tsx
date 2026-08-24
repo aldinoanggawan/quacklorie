@@ -6,7 +6,11 @@ interface ScreenHeaderProps {
   children?: React.ReactNode;
 }
 
-export const ScreenHeader = ({ title, onBack, children }: ScreenHeaderProps) => (
+export const ScreenHeader = ({
+  title,
+  onBack,
+  children,
+}: ScreenHeaderProps) => (
   <div className="flex items-center gap-3">
     <button
       type="button"
@@ -16,7 +20,12 @@ export const ScreenHeader = ({ title, onBack, children }: ScreenHeaderProps) => 
     >
       ←
     </button>
-    <Typography variant="subheading" as="h1" color={'var(--color-ink)'} className="flex-1">
+    <Typography
+      variant="subheading"
+      as="h1"
+      color={'var(--color-ink)'}
+      className="flex-1"
+    >
       {title}
     </Typography>
     {children}
