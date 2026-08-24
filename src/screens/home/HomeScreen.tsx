@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Typography } from '../../components/ui/Typography';
 import { Chip } from '../../components/ui/Chip';
+import { Pill } from '../../components/ui/Pill';
 import { MealsSection } from '../../components/MealsSection';
 import { WorkoutSection } from '../../components/WorkoutSection';
 import { HydrationSection } from '../../components/HydrationSection';
 import { ScreenContainer } from '../../components/ScreenContainer';
 import { Duck } from '../../components/duck/Duck';
 import type { DuckEmotion } from '../../components/duck/Duck';
-import { Spinner } from '../../components/Spinner';
 import { useAuth } from '../../hooks/useAuth';
 import { useProfile } from '../../hooks/useProfile';
 import { useDailySummary } from '../../hooks/useDailySummary';
@@ -56,28 +56,21 @@ export const HomeScreen = () => {
         </div>
 
         {/* Streak pill */}
-        <div className="flex items-center gap-1 rounded-full border-1.5 border-line bg-surface-brand py-1 px-2.5">
-          {streakLoading ? (
-            <Spinner
-              size={14}
-              color="var(--color-ink)"
-              trackColor="rgba(0, 0, 0, 0.15)"
-            />
-          ) : (
-            <>
-              <span
-                aria-hidden="true"
-                className="text-sm"
-                style={{ opacity: daysLogged > 0 ? 1 : 0.35 }}
-              >
-                🔥
-              </span>
-              <Typography variant="label-strong" color={'var(--color-ink)'}>
-                {daysLogged}/{totalDays} days
-              </Typography>
-            </>
-          )}
-        </div>
+        <Pill
+          loading={streakLoading}
+          ariaLabel={`${daysLogged} of ${totalDays} days logged this week`}
+        >
+          <span
+            aria-hidden="true"
+            className="text-sm"
+            style={{ opacity: daysLogged > 0 ? 1 : 0.35 }}
+          >
+            🔥
+          </span>
+          <Typography variant="label-strong" color={'var(--color-ink)'}>
+            {daysLogged}/{totalDays} days
+          </Typography>
+        </Pill>
       </div>
 
       {/* Hero card */}
