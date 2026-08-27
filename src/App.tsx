@@ -18,6 +18,7 @@ import { PaceSelection } from './screens/onboarding/PaceSelection';
 import { ProfileSetup } from './screens/onboarding/ProfileSetup';
 import { HomeScreen } from './screens/home/HomeScreen';
 import { LogScreen } from './screens/log/LogScreen';
+import { ProgressScreen } from './screens/progress/ProgressScreen';
 import { MealLoggingScreen } from './screens/home/MealLoggingScreen';
 import { AuthScreen } from './screens/auth/AuthScreen';
 import { ProfileScreen } from './screens/profile/ProfileScreen';
@@ -60,10 +61,7 @@ export const App = () => {
               <Route path="/meal/:mealType" element={<MealLoggingScreen />} />
               <Route path="/log" element={<LogScreen />} />
               <Route path="/water" element={<Placeholder name="Water" />} />
-              <Route
-                path="/progress"
-                element={<Placeholder name="Progress" />}
-              />
+              <Route path="/progress" element={<ProgressScreen />} />
               <Route path="/profile" element={<ProfileScreen />} />
             </Route>
             <Route path="/profile/password" element={<EditPasswordScreen />} />
