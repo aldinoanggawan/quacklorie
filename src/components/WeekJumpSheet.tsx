@@ -1,7 +1,7 @@
-import { BottomSheet } from '../../components/BottomSheet';
-import { MonthCalendar } from '../../components/MonthCalendar';
-import { toDateString } from '../../lib/dateHelpers';
-import { addDays } from '../../lib/weekHelpers';
+import { BottomSheet } from './BottomSheet';
+import { MonthCalendar } from './MonthCalendar';
+import { toDateString } from '../lib/dateHelpers';
+import { addDays } from '../lib/weekHelpers';
 
 interface WeekJumpSheetProps {
   open: boolean;

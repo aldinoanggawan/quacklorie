@@ -2,23 +2,17 @@ import { useState } from 'react';
 import { ScreenContainer } from '../../components/ScreenContainer';
 import { Typography } from '../../components/ui/Typography';
 import { Chip } from '../../components/ui/Chip';
-import { ChevronIcon } from '../../components/icons/ChevronIcon';
 import { ConfirmSheet } from '../../components/ConfirmSheet';
 import { LoadingScreen } from '../../components/LoadingScreen';
+import { WeekNavigator } from '../../components/WeekNavigator';
 import { LogDateGroup, type DeleteTarget } from './LogDateGroup';
 import { LogEmptyDayRow } from './LogEmptyDayRow';
 import { LogEmptyState } from './LogEmptyState';
-import { WeekJumpSheet } from './WeekJumpSheet';
 import { useWeekLog } from '../../hooks/useWeekLog';
 import { useProfile } from '../../hooks/useProfile';
 import { deleteMeal, deleteWorkout, deleteWaterLog } from '../../lib/db';
 import { toDateString } from '../../lib/dateHelpers';
-import {
-  startOfWeek,
-  addDays,
-  formatWeekRange,
-  dayLabel,
-} from '../../lib/weekHelpers';
+import { startOfWeek, dayLabel } from '../../lib/weekHelpers';
 
 const deleteByKind = (target: DeleteTarget): Promise<unknown> => {
   switch (target.kind) {
@@ -33,7 +27,6 @@ const deleteByKind = (target: DeleteTarget): Promise<unknown> => {
 
 export const LogScreen = () => {
   const [weekStart, setWeekStart] = useState(() => startOfWeek(new Date()));
-  const [pickerOpen, setPickerOpen] = useState(false);
   const { days, loading, refresh } = useWeekLog(weekStart);
   const { profile } = useProfile();
   const [pendingDelete, setPendingDelete] = useState<DeleteTarget | null>(null);
@@ -71,36 +64,7 @@ export const LogScreen = () => {
         Log
       </Typography>
 
-      <div className="flex items-center justify-between">
-        <button
-          type="button"
-          aria-label="Previous week"
-          onClick={() => setWeekStart((d) => addDays(d, -7))}
-          className="cursor-pointer border-0 bg-transparent p-1"
-        >
-          <span className="inline-block rotate-180">
-            <ChevronIcon />
-          </span>
-        </button>
-        <button
-          type="button"
-          onClick={() => setPickerOpen(true)}
-          className="cursor-pointer border-0 bg-transparent p-0 font-[inherit]"
-        >
-          <Typography variant="label-strong" color={'var(--color-ink)'}>
-            {formatWeekRange(weekStart, addDays(weekStart, 6), isCurrentWeek)}
-          </Typography>
-        </button>
-        <button
-          type="button"
-          aria-label="Next week"
-          disabled={isCurrentWeek}
-          onClick={() => setWeekStart((d) => addDays(d, 7))}
-          className="cursor-pointer border-0 bg-transparent p-1 disabled:cursor-default disabled:opacity-30"
-        >
-          <ChevronIcon />
-        </button>
-      </div>
+      <WeekNavigator weekStart={weekStart} onWeekStartChange={setWeekStart} />
 
       {!weekHasData && <LogEmptyState isCurrentWeek={isCurrentWeek} />}
 
@@ -154,16 +118,6 @@ export const LogScreen = () => {
           </div>
         </>
       )}
-
-      <WeekJumpSheet
-        open={pickerOpen}
-        selectedWeekStart={weekStart}
-        onSelect={(date) => {
-          setWeekStart(startOfWeek(date));
-          setPickerOpen(false);
-        }}
-        onClose={() => setPickerOpen(false)}
-      />
 
       <ConfirmSheet
         open={pendingDelete !== null}
