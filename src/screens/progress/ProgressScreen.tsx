@@ -9,7 +9,7 @@ import { HabitsCard } from './HabitsCard';
 import { useWeekLog } from '../../hooks/useWeekLog';
 import { useProfile } from '../../hooks/useProfile';
 import { toDateString } from '../../lib/dateHelpers';
-import { startOfWeek } from '../../lib/weekHelpers';
+import { startOfWeek, addDays, weekPhrase } from '../../lib/weekHelpers';
 import { streakEmotion } from '../../lib/duckHelpers';
 
 export const ProgressScreen = () => {
@@ -21,6 +21,7 @@ export const ProgressScreen = () => {
 
   const isCurrentWeek =
     toDateString(weekStart) === toDateString(startOfWeek(new Date()));
+  const weekLabel = weekPhrase(weekStart, addDays(weekStart, 6), isCurrentWeek);
   const daysLogged = days.filter((d) => d.meals.length > 0).length;
 
   const weightDelta = profile
@@ -57,7 +58,7 @@ export const ProgressScreen = () => {
           color={'var(--color-muted)'}
           className="my-1 uppercase tracking-label"
         >
-          Days logged {isCurrentWeek ? 'this week' : 'that week'}
+          Days logged {weekLabel}
         </Typography>
         <div aria-hidden="true" className="absolute right-4 top-3">
           <Duck emotion={streakEmotion(daysLogged, 7)} size={80} />
@@ -73,7 +74,7 @@ export const ProgressScreen = () => {
       />
 
       {/* Secondary: water & workout habits */}
-      <HabitsCard days={days} />
+      <HabitsCard days={days} weekLabel={weekLabel} />
 
       {/* Tertiary: weight goal */}
       {profile && (

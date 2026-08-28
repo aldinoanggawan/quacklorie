@@ -34,6 +34,12 @@ export const formatWeekRange = (
   return `${startLabel} – ${endLabel}`;
 };
 
+export const weekPhrase = (
+  start: Date,
+  end: Date,
+  isCurrentWeek: boolean,
+): string => (isCurrentWeek ? 'this week' : formatWeekRange(start, end, false));
+
 export const dayLabel = (date: string): string =>
   new Date(`${date}T00:00:00`).toLocaleDateString('en-GB', {
     weekday: 'long',

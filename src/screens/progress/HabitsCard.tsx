@@ -44,9 +44,10 @@ const WorkoutDot = ({ logged }: WorkoutDotProps) => (
 
 interface HabitsCardProps {
   days: WeekDayGroup[];
+  weekLabel: string;
 }
 
-export const HabitsCard = ({ days }: HabitsCardProps) => {
+export const HabitsCard = ({ days, weekLabel }: HabitsCardProps) => {
   const { user } = useAuth();
   const [bottleMl, setBottleMl] = useState(0);
 
@@ -79,7 +80,7 @@ export const HabitsCard = ({ days }: HabitsCardProps) => {
         color={'var(--color-ink)'}
         className="mb-3"
       >
-        Habits this week
+        Habits {weekLabel}
       </Typography>
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-2">
