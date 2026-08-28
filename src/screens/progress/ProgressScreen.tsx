@@ -3,9 +3,9 @@ import { ScreenContainer } from '../../components/ScreenContainer';
 import { Typography } from '../../components/ui/Typography';
 import { Chip } from '../../components/ui/Chip';
 import { Duck } from '../../components/duck/Duck';
-import type { DuckEmotion } from '../../components/duck/Duck';
 import { LoadingScreen } from '../../components/LoadingScreen';
 import { WeeklyTrendCard } from './WeeklyTrendCard';
+import { HabitsCard } from './HabitsCard';
 import { useWeekLog } from '../../hooks/useWeekLog';
 import { useProfile } from '../../hooks/useProfile';
 import { toDateString } from '../../lib/dateHelpers';
@@ -71,6 +71,9 @@ export const ProgressScreen = () => {
         profile={profile}
         onWeekStartChange={setWeekStart}
       />
+
+      {/* Secondary: water & workout habits */}
+      <HabitsCard days={days} />
 
       {/* Tertiary: weight goal */}
       {profile && (

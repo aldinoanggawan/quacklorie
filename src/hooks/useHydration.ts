@@ -9,7 +9,7 @@ import {
 import { toDateString } from '../lib/dateHelpers';
 import type { WaterLog, BottleConfig } from '../types/models';
 
-const DEFAULT_GOAL_ML = 2000;
+export const DEFAULT_GOAL_ML = 2000;
 
 interface Hydration {
   logs: WaterLog[];
