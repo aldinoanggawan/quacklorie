@@ -1,13 +1,9 @@
 import { Typography } from '../../components/ui/Typography';
 import { Chip } from '../../components/ui/Chip';
 import { WeekNavigator } from '../../components/WeekNavigator';
+import { shortDayLabel } from '../../lib/dateHelpers';
 import type { WeekDayGroup } from '../../hooks/useWeekLog';
 import type { Profile } from '../../types/models';
-
-const shortDayLabel = (date: string): string =>
-  new Date(`${date}T00:00:00`).toLocaleDateString('en-GB', {
-    weekday: 'short',
-  });
 
 interface WeeklyTrendCardProps {
   weekStart: Date;

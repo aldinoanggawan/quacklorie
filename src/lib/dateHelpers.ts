@@ -12,6 +12,16 @@ export const formatDate = (date: Date): string =>
     month: 'long',
   });
 
+export const shortDayLabel = (date: string): string =>
+  new Date(`${date}T00:00:00`).toLocaleDateString('en-GB', {
+    weekday: 'short',
+  });
+
+export const dayLetter = (date: string): string =>
+  new Date(`${date}T00:00:00`).toLocaleDateString('en-GB', {
+    weekday: 'narrow',
+  });
+
 export const greeting = (): string => {
   const h = new Date().getHours();
   if (h < 12) return 'Good morning';

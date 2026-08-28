@@ -10,13 +10,7 @@ import { useWeekLog } from '../../hooks/useWeekLog';
 import { useProfile } from '../../hooks/useProfile';
 import { toDateString } from '../../lib/dateHelpers';
 import { startOfWeek } from '../../lib/weekHelpers';
-
-const streakEmotion = (daysLogged: number, totalDays: number): DuckEmotion => {
-  if (daysLogged === totalDays) return 'celebrating';
-  if (daysLogged >= totalDays / 2) return 'proud';
-  if (daysLogged > 0) return 'happy';
-  return 'sleepy';
-};
+import { streakEmotion } from '../../lib/duckHelpers';
 
 export const ProgressScreen = () => {
   const [weekStart, setWeekStart] = useState(() => startOfWeek(new Date()));
